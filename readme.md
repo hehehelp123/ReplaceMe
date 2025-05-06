@@ -1,6 +1,6 @@
 # ReplaceMe: Training-Free Depth Pruning via Block Pruning & Linear Transformations 🔥
 
-[![arXiv](https://img.shields.io/badge/arXiv-2310.12345-b31b1b.svg)]()
+[![arXiv](https://img.shields.io/badge/arXiv-2310.12345-b31b1b.svg)](https://arxiv.org/abs/2505.02819)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 
@@ -95,11 +95,11 @@ get_lt_with_solvers --method cosine --alpha 0.1
 If you use ReplaceMe in your research, please cite our paper:
 
 ```bibtex
-@article{replaceme2024,
-  title={Replace Me: Network Simplification via Block Pruning and Linear Transformations},
-  author={},
-  journal={},
-  year={2025}
+@article{shopkhoev2025replaceme0,
+  title   = {ReplaceMe: Network Simplification via Layer Pruning and Linear Transformations},
+  author  = {Dmitriy Shopkhoev and Ammar Ali and Magauiya Zhussip and Valentin Malykh and Stamatios Lefkimmiatis and Nikos Komodakis and Sergey Zagoruyko},
+  year    = {2025},
+  journal = {arXiv preprint arXiv: 2505.02819}
 }
 ```
 # 🤝 Contributing
