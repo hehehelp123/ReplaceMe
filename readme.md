@@ -28,6 +28,8 @@ run_replaceme --config ./reproduce/Replace_Me_pipeline_lstsq.yaml
 # Cosine similarity method
 run_replaceme --config ./reproduce/Replace_Me_pipeline_cosine.yaml
 ```
+### Update
+- 11/05/2025 Add support [(unofficial implementation)](https://github.com/arcee-ai/PruneMe) for [UIDL method](https://arxiv.org/abs/2403.17887) 
 ## 🔧 Advanced Configuration
 Sample Configuration File
 ```yaml
