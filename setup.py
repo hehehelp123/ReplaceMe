@@ -22,7 +22,7 @@ dependencies = [
 
 setup(
     name="ReplaceMe",  # Update to your package's name
-    version="0.1",
+    version="0.1.1",
     packages=['ReplaceMe'],
     install_requires=dependencies,
     entry_points={
@@ -32,6 +32,7 @@ setup(
             'get_lt_with_solvers=ReplaceMe.cosine_dist:run_from_config',
             'evaluate_model=ReplaceMe.evaluator:run_from_config',
             'run_replaceme=ReplaceMe.ReplaceMe_pipeline:run_from_config',
+            'run_uidl=ReplaceMe.UIDL_pipeline:run_from_config',
         ],
     },
     author="MTS AI Research Team",
