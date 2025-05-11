@@ -49,8 +49,8 @@ def uidl(
         end_id: Ending layer ID
         num_layer: Number of layers
         distances_path: Path to save distance metrics
-        num_A: Number of LT transforms
-        merge_consecutive: Whether to merge consecutive LT transforms
+        num_A: Number of blocks
+        merge_consecutive: Whether to merge consecutive blocks
     
     Returns:
         Path where transformed model is saved
