@@ -74,7 +74,7 @@ def uidl(
         token=token
     )
     model = truncate_model(model, start_id - num_layer, end_id - num_layer)
-    
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
     if save_path is None:
         if not os.path.exists('output_models'):
             os.mkdir('output_models')
