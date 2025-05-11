@@ -32,7 +32,9 @@ def UIDL_pipeline(config):
     if config['distances_path'] is None:
         # Profile distances using filtered configuration
         profile_distances(**filtered_config)
-        config['distances_path'] = "./distances.pth"         
+        config['distances_path'] = "./distances.pth"  
+    signature = inspect.signature(uidl)
+    filtered_config = {k: v for k, v in config.items() if k in signature.parameters}
     # Load average distances and select non-overlapping blocks
     average_distances = torch.load(filtered_config['distances_path'])  
     selected_blocks = select_non_overlapping_blocks(
@@ -45,9 +47,7 @@ def UIDL_pipeline(config):
     start_ids = sorted([x[0] for x in selected_blocks])
     end_ids = sorted([x[1] for x in selected_blocks])
     num_layers = [end_ids[i] - start_ids[i] for i in range(len(start_ids))]
-    num_layers = [sum(num_layers[:i]) for i in range(len(start_ids) + 1)]
-    signature = inspect.signature(uidl)
-    filtered_config = {k: v for k, v in config.items() if k in signature.parameters}
+    num_layers = [sum(num_layers[:i]) for i in range(len(start_ids) + 1)]    
     # Iterate over each selected block
     for i in range(len(selected_blocks)):
         path = uidl(**filtered_config, start_id=start_ids[i], end_id=end_ids[i], num_layer=num_layers[i])
