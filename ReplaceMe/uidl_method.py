@@ -80,17 +80,17 @@ def uidl(
             os.mkdir('output_models')
         save_path = "output_models/" + (
             f"{model_path}_{layers_to_skip}_layers_{start_id}_"
-            f"{end_id}_{dataset}_{dataset_size}"
+            f"{end_id}"
         ).replace("/", "_")
     
-    model.save_pretrained(f"{save_path}_UIDL_{loss}_{solver}")
-    tokenizer.save_pretrained(f"{save_path}_UIDL_{loss}_{solver}")
+    model.save_pretrained(f"{save_path}_UIDL")
+    tokenizer.save_pretrained(f"{save_path}_UIDL")
     
     # Final cleanup
     del model
     gc.collect()
     torch.cuda.empty_cache()
-    return f"{save_path}_UIDL_{loss}_{solver}"
+    return f"{save_path}_UIDL"
 
 
 def read_config(config_path: str) -> dict:
