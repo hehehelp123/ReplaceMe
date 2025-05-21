@@ -241,7 +241,9 @@ def cosine_dist(
         torch.save(transform, f"{save_path}_ReplaceMe_{loss}_{solver}_transform")
     
     # Final cleanup
-    del model, a1, a2, a3
+    del model, a1, a2
+    if accurate:
+      del a3
     gc.collect()
     torch.cuda.empty_cache()
     
