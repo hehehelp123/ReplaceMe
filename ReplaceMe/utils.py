@@ -54,9 +54,15 @@ def truncate_model(model: nn.Module, start_layer: int, end_layer: int) -> nn.Mod
     """Truncate model by removing specified layers."""
     model.config.num_hidden_layers -= (end_layer - start_layer)
     model.model.layers = nn.ModuleList([
-        layer for idx, layer in enumerate(model.model.layers) 
+        layer for idx, layer in enumerate(model.model.layers)
         if idx < start_layer or idx >= end_layer
     ])
+    layer_types = getattr(model.config, "layer_types", None)
+    if layer_types is not None:
+        model.config.layer_types = [
+            layer_type for idx, layer_type in enumerate(layer_types)
+            if idx < start_layer or idx >= end_layer
+        ]
     return model
 
 
@@ -79,7 +85,8 @@ def get_calib_dataloader(
         'arcee-ai/sec-data-mini': lambda: datasets.load_dataset(dataset, split=dataset_subset),
         'wikitext': lambda: datasets.load_dataset('wikitext', 'wikitext-2-raw-v1', split=dataset_subset),
         'Open-Orca/SlimOrca': lambda: _load_orca_dataset(dataset_size, tokenizer),
-        'fineweb_and_orca': lambda: _load_mixed_dataset(dataset_size, dataset_subset, tokenizer)
+        'fineweb_and_orca': lambda: _load_mixed_dataset(dataset_size, dataset_subset, tokenizer),
+        'openai/gsm8k': lambda: _load_gsm8k_dataset(dataset_subset)
     }
     
     if dataset not in dataset_handlers:
@@ -90,6 +97,17 @@ def get_calib_dataloader(
         data = data.select(range(dataset_size))
     
     return DataLoader(data[dataset_column], batch_size=batch_size, shuffle=False, drop_last=True)
+
+GSM8K_CALIB_TEMPLATE = "Question: {question}\nAnswer: {answer}"
+
+
+def _load_gsm8k_dataset(subset: str) -> datasets.Dataset:
+    data = datasets.load_dataset("openai/gsm8k", "main", split=subset)
+    return data.map(
+        lambda example: {"text": GSM8K_CALIB_TEMPLATE.format(**example)},
+        remove_columns=data.column_names,
+    )
+
 
 def _load_orca_dataset(size: int, tokenizer: PreTrainedTokenizerBase) -> datasets.Dataset:
     """Helper to load and format Orca dataset."""

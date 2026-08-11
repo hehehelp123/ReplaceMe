@@ -50,7 +50,6 @@ def profile_distances(
     activations_save_path: Optional[str] = None,
     use_4bit: bool = False,
     save_path: Optional[str] = None,
-    min_distance_layer: Optional[int] = None,
     token: Optional[str] = None,
 ) -> None:
     """Profile distances between transformer model layers.
@@ -67,7 +66,6 @@ def profile_distances(
         activations_save_path: Path to save activations (unused)
         use_4bit: Whether to use 4-bit quantization
         save_path: Path to save results (unused)
-        min_distance_layer: index of the layer to start cut
         token: Authentication token for private models
     """
     device_map = "auto" if torch.cuda.is_available() else "cpu"
