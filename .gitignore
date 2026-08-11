@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+*.pth
+*.safetensors
+*.bin
+output_models/
+pruned_*/
+runs/
+adapter/
+hf/
+.cache/
+
+*.log
