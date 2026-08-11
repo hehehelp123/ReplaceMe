@@ -32,11 +32,14 @@ SYLVESTER_EIGENVALUE_FLOOR = 1e-12
 DIAGONAL_SOLVE_FLOOR = 1e-8
 
 
+SOLVER_DEVICE = "cpu"
+
+
 def solve_sylvester_standard(A, B, C, validate=False):
     dtype = torch.float64
 
     with torch.no_grad():
-        A, B, C = [x.to(dtype) for x in (A, B, C)]
+        A, B, C = [x.to(device=SOLVER_DEVICE, dtype=dtype) for x in (A, B, C)]
 
         Lambda, U = torch.linalg.eigh(A)
         Sigma, V = torch.linalg.eigh(B)
@@ -60,6 +63,7 @@ def solve_sylvester_standard(A, B, C, validate=False):
 
 
 def solve_diagonal(A, B, C):
+    A, B, C = [x.to(device=SOLVER_DEVICE, dtype=torch.float64) for x in (A, B, C)]
     denom = torch.diag(A) + torch.diag(B)
     return torch.diag(torch.diag(C) / (denom + DIAGONAL_SOLVE_FLOOR))
 
