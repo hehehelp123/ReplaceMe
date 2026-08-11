@@ -144,5 +144,6 @@ def scenario_3(config: ExperimentConfig) -> dict:
     find_candidates(config)
     prune(config)
     heal(config)
+    eval_pruned(config)
     restore(config)
     return eval_replaceme(config)
