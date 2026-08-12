@@ -199,8 +199,15 @@ def profile_distances(
         logging.info(f"taylor veto: q={taylor_veto_quantile}, thr={thr:.4f}, "
                      f"vetoed {len(vetoed)} candidates")
 
-    best = int(np.argmin(score))
+    order = sorted(range(n_cand), key=lambda i: (score[i], dist_act[i]))
+    best = order[0]
     selected_block = (best + 1, best + 1 + layers_to_skip)
+
+    tied = [i for i in range(n_cand) if score[i] == score[best]]
+    if len(tied) > 1:
+        logging.info(
+            "combined score ties at %.1f between %s; broken by dist_act"
+            % (score[best], [(i + 1, i + 1 + layers_to_skip) for i in tied]))
 
     with open(csv_save_path, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=[
@@ -221,7 +228,6 @@ def profile_distances(
     torch.save(forced, distances_save_path)
 
     logging.info(f"CSV -> {csv_save_path} | distances -> {distances_save_path}")
-    order = np.argsort(score)
     logging.info("top-3 by combined score:")
     for rank, i in enumerate(order[:3], 1):
         logging.info(

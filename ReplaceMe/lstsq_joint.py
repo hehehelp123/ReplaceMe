@@ -335,6 +335,11 @@ def lstsq(
         ).to(torch.bfloat16)
         layers[layer_idx].mlp.down_proj.weight.data = transformed_weight
 
+        norm_ratio = (transformed_weight.to(torch.float32).norm()
+                      / original_weight.to(torch.float32).norm()).item()
+        logging.info(f"Block {i}: down_proj of layer {layer_idx} scaled by "
+                     f"{norm_ratio:.2f}x in Frobenius norm")
+
     if save_path is None:
         os.makedirs('output_models', exist_ok=True)
         layer_indices_for_name = '__'.join([f"{start_ids[i]}_{end_ids[i]}" for i in range(len(selected_blocks))])
