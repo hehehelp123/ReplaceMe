@@ -59,7 +59,7 @@ def train_lora(config, model_path: str, adapter_dir: Path) -> Path:
         args=TrainingArguments(
             output_dir=str(adapter_dir / "checkpoints"),
             per_device_train_batch_size=config.train_batch_size,
-            gradient_accumulation_steps=1,
+            gradient_accumulation_steps=config.train_grad_accum,
             num_train_epochs=config.train_epochs,
             learning_rate=config.train_learning_rate,
             warmup_steps=config.train_warmup_steps,

@@ -26,6 +26,7 @@ class ExperimentConfig:
     identity_blend_threshold: float = 0.15
 
     train_batch_size: int = 8
+    train_grad_accum: int = 1
     train_max_length: int = 384
     train_learning_rate: float = 2e-4
     train_epochs: float = 1.0
