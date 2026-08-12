@@ -6,6 +6,16 @@ PROMPT_TEMPLATE = "Question: {question}\nAnswer:"
 TRAIN_TEMPLATE = "Question: {question}\nAnswer: {answer}"
 LABELLED_ANSWER = re.compile(r"####\s*(-?\d+(?:,\d{3})*(?:\.\d+)?)")
 ANY_NUMBER = re.compile(r"-?\d+(?:,\d{3})*(?:\.\d+)?")
+CONTINUATION_MARKERS = ("\nQuestion:", "[Question]", "\nQ:", "\nProblem:")
+
+
+def truncate_at_continuation(text: str) -> str:
+    cut = len(text)
+    for marker in CONTINUATION_MARKERS:
+        index = text.find(marker)
+        if index != -1:
+            cut = min(cut, index)
+    return text[:cut]
 
 
 def load_gsm8k(split: str, limit=None):
@@ -14,7 +24,7 @@ def load_gsm8k(split: str, limit=None):
 
 
 def extract_final_answer(text: str):
-    text = text.strip()
+    text = truncate_at_continuation(text.strip())
     labelled = LABELLED_ANSWER.search(text)
     if labelled:
         return labelled.group(1).replace(",", "")

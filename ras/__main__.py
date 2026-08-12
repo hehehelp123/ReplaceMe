@@ -2,6 +2,7 @@ import argparse
 
 from . import pipeline
 from .config import load_config
+from .rescore import rescore_all
 
 STAGES = {
     "find-candidates": pipeline.find_candidates,
@@ -16,6 +17,7 @@ STAGES = {
     "scenario-1": pipeline.scenario_1,
     "scenario-2": pipeline.scenario_2,
     "scenario-3": pipeline.scenario_3,
+    "rescore": lambda config: rescore_all(config.runs_dir),
 }
 
 
