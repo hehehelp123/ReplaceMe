@@ -42,6 +42,7 @@ class ExperimentConfig:
     eval_load_in_8bit: bool = False
 
     selected_block: Optional[List[int]] = None
+    pruned_dir: Optional[str] = None
 
     @property
     def run_dir(self) -> Path:
@@ -54,10 +55,6 @@ class ExperimentConfig:
     @property
     def distances_path(self) -> Path:
         return self.run_dir / "distances.pth"
-
-    @property
-    def pruned_dir(self) -> Path:
-        return self.run_dir / "pruned"
 
     @property
     def sft_adapter_dir(self) -> Path:

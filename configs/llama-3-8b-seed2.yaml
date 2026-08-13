@@ -1,0 +1,30 @@
+model_path: unsloth/llama-3-8b
+model_tag: llama-3-8b-seed2
+layers_to_skip: 8
+
+calib_size: 128
+calib_max_length: 256
+calib_batch_size: 2
+answer_only_loss: true
+compute_taylor: false
+taylor_veto_quantile: null
+
+alpha_act: 1.0
+alpha_grad: 0.5
+alpha_reg: 0.0
+identity_blend_threshold: 0.15
+
+train_batch_size: 8
+train_max_length: 384
+train_learning_rate: 2.0e-4
+train_epochs: 1.0
+
+eval_batch_size: 64
+eval_max_new_tokens: 256
+eval_limit: null
+
+seed: 2
+selected_block:
+  - 22
+  - 30
+pruned_dir: /home/hehehelp13/replaceme/repo/runs/llama-3-8b/pruned_ReplaceMe_joint_lstsq_1

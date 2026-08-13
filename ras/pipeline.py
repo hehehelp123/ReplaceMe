@@ -41,6 +41,16 @@ def selected_block(config: ExperimentConfig) -> Tuple[int, int]:
     return tuple(block)
 
 
+def pruned_dir(config: ExperimentConfig) -> str:
+    if config.pruned_dir is not None:
+        return config.pruned_dir
+    stored = read_state(config).get("pruned_dir")
+    if stored is None:
+        raise RuntimeError("no pruned model: run prune first "
+                           "or set pruned_dir in the config")
+    return stored
+
+
 def find_candidates(config: ExperimentConfig) -> Tuple[int, int]:
     config.prepare_dirs()
     signals = distance_scored.profile_distances(
@@ -90,18 +100,13 @@ def prune(config: ExperimentConfig) -> Path:
 
 
 def heal(config: ExperimentConfig) -> Path:
-    state = read_state(config)
-    pruned_dir = state.get("pruned_dir")
-    if pruned_dir is None:
-        raise RuntimeError("no pruned model: run prune first")
-    return train_lora(config, pruned_dir, config.heal_adapter_dir)
+    return train_lora(config, pruned_dir(config), config.heal_adapter_dir)
 
 
 def restore(config: ExperimentConfig) -> Path:
-    state = read_state(config)
     return restore_removed_layers(
         base_model_path=config.model_path,
-        pruned_dir=state["pruned_dir"],
+        pruned_dir=pruned_dir(config),
         adapter_dir=str(config.heal_adapter_dir),
         output_dir=str(config.restored_dir),
         block=selected_block(config),
@@ -122,8 +127,7 @@ def eval_sft(config: ExperimentConfig) -> dict:
 
 
 def eval_pruned(config: ExperimentConfig) -> dict:
-    state = read_state(config)
-    return run_evaluation(config, "pruned_healed", state["pruned_dir"],
+    return run_evaluation(config, "pruned_healed", pruned_dir(config),
                           str(config.heal_adapter_dir))
 
 
