@@ -39,6 +39,7 @@ class ExperimentConfig:
     eval_batch_size: int = 64
     eval_max_new_tokens: int = 256
     eval_limit: Optional[int] = None
+    eval_load_in_8bit: bool = False
 
     selected_block: Optional[List[int]] = None
 
