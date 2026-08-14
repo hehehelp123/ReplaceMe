@@ -41,6 +41,11 @@ class ExperimentConfig:
     eval_limit: Optional[int] = None
     precision: str = "bf16"
 
+    harness_tasks: List[str] = field(default_factory=lambda: ["arc_challenge"])
+    harness_num_fewshot: int = 0
+    harness_batch_size: int = 16
+    harness_limit: Optional[int] = None
+
     selected_block: Optional[List[int]] = None
     pruned_dir: Optional[str] = None
 

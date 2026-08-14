@@ -6,6 +6,7 @@ from ReplaceMe import distance_scored, lstsq_joint
 
 from .config import ExperimentConfig
 from .evaluate import run_evaluation
+from .harness import run_harness
 from .quantization import NF4
 from .restore import restore_removed_layers
 from .train import train_lora
@@ -134,6 +135,24 @@ def eval_pruned(config: ExperimentConfig) -> dict:
 
 def eval_replaceme(config: ExperimentConfig) -> dict:
     return run_evaluation(config, "replaceme", str(config.restored_dir))
+
+
+def harness_baseline(config: ExperimentConfig) -> dict:
+    return run_harness(config, "baseline", config.model_path)
+
+
+def harness_sft(config: ExperimentConfig) -> dict:
+    return run_harness(config, "sft", config.model_path,
+                       str(config.sft_adapter_dir))
+
+
+def harness_pruned(config: ExperimentConfig) -> dict:
+    return run_harness(config, "pruned_healed", pruned_dir(config),
+                       str(config.heal_adapter_dir))
+
+
+def harness_replaceme(config: ExperimentConfig) -> dict:
+    return run_harness(config, "replaceme", str(config.restored_dir))
 
 
 def scenario_1(config: ExperimentConfig) -> dict:
