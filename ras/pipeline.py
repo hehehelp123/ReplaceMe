@@ -6,6 +6,7 @@ from ReplaceMe import distance_scored, lstsq_joint
 
 from .config import ExperimentConfig
 from .evaluate import run_evaluation
+from .quantization import NF4
 from .restore import restore_removed_layers
 from .train import train_lora
 
@@ -62,7 +63,7 @@ def find_candidates(config: ExperimentConfig) -> Tuple[int, int]:
         layers_to_skip=config.layers_to_skip,
         dataset_size=config.calib_size,
         dataset_subset=DATASET_SUBSET,
-        use_4bit=False,
+        use_4bit=config.precision == NF4,
         compute_taylor=config.compute_taylor,
         taylor_veto_quantile=config.taylor_veto_quantile,
         answer_only_loss=config.answer_only_loss,
@@ -85,7 +86,7 @@ def prune(config: ExperimentConfig) -> Path:
         layers_to_skip=config.layers_to_skip,
         dataset_size=config.calib_size,
         dataset_subset=DATASET_SUBSET,
-        use_4bit=False,
+        use_4bit=config.precision == NF4,
         save_path=str(config.run_dir / "pruned"),
         alpha=config.alpha_reg,
         alpha_act=config.alpha_act,

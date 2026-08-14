@@ -24,4 +24,4 @@ eval_batch_size: 64
 eval_max_new_tokens: 256
 eval_limit: null
 
-eval_load_in_8bit: true
+precision: int8

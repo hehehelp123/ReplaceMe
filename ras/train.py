@@ -2,11 +2,12 @@ import gc
 from pathlib import Path
 
 import torch
-from peft import LoraConfig, get_peft_model
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from transformers import (AutoModelForCausalLM, AutoTokenizer,
                           DataCollatorForSeq2Seq, Trainer, TrainingArguments)
 
 from .data import build_training_texts, load_gsm8k
+from .quantization import is_quantized, quantization_config
 
 
 class CausalDataset(torch.utils.data.Dataset):
@@ -38,8 +39,12 @@ def train_lora(config, model_path: str, adapter_dir: Path) -> Path:
     tokenizer.padding_side = "right"
 
     model = AutoModelForCausalLM.from_pretrained(
-        model_path, dtype=torch.bfloat16, device_map={"": 0})
+        model_path, dtype=torch.bfloat16, device_map={"": 0},
+        quantization_config=quantization_config(config.precision))
     model.config.use_cache = False
+    if is_quantized(config.precision):
+        model = prepare_model_for_kbit_training(model,
+                                                use_gradient_checkpointing=False)
 
     model = get_peft_model(model, LoraConfig(
         r=config.lora_rank,

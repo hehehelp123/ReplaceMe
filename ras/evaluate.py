@@ -7,23 +7,22 @@ from typing import Optional
 import torch
 from peft import PeftModel
 from tqdm import tqdm
-from transformers import (AutoModelForCausalLM, AutoTokenizer,
-                          BitsAndBytesConfig)
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from .data import build_prompts, extract_final_answer, load_gsm8k
+from .quantization import BF16, quantization_config
 
 
 def load_for_generation(model_path: str, adapter_path: Optional[str] = None,
-                        load_in_8bit: bool = False):
+                        precision: str = BF16):
     tokenizer = AutoTokenizer.from_pretrained(adapter_path or model_path)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "left"
 
-    quantization = BitsAndBytesConfig(load_in_8bit=True) if load_in_8bit else None
     model = AutoModelForCausalLM.from_pretrained(
         model_path, dtype=torch.bfloat16, device_map={"": 0},
-        quantization_config=quantization)
+        quantization_config=quantization_config(precision))
     if adapter_path is not None:
         model = PeftModel.from_pretrained(model, adapter_path).merge_and_unload()
 
@@ -91,7 +90,7 @@ def run_evaluation(config, stage: str, model_path: str,
                    adapter_path: Optional[str] = None) -> dict:
     config.prepare_dirs()
     model, tokenizer = load_for_generation(model_path, adapter_path,
-                                           config.eval_load_in_8bit)
+                                           config.precision)
 
     result = evaluate_gsm8k(model, tokenizer, config.eval_batch_size,
                             config.eval_max_new_tokens, config.eval_limit)
@@ -99,9 +98,9 @@ def run_evaluation(config, stage: str, model_path: str,
     result["model_path"] = str(model_path)
     result["adapter_path"] = str(adapter_path) if adapter_path else None
     result["layers"] = model.config.num_hidden_layers
-    result["load_in_8bit"] = config.eval_load_in_8bit
+    result["precision"] = config.precision
 
-    suffix = "_int8" if config.eval_load_in_8bit else ""
+    suffix = "" if config.precision == BF16 else f"_{config.precision}"
     output_path = Path(config.results_dir) / f"{stage}{suffix}.json"
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)

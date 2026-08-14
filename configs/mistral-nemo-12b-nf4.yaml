@@ -1,6 +1,6 @@
-model_path: unsloth/llama-3-8b
-model_tag: llama-3-8b
-layers_to_skip: 8
+model_path: mistralai/Mistral-Nemo-Base-2407
+model_tag: mistral-nemo-12b
+layers_to_skip: 10
 
 calib_size: 128
 calib_max_length: 256
@@ -14,7 +14,8 @@ alpha_grad: 0.5
 alpha_reg: 0.0
 identity_blend_threshold: 0.15
 
-train_batch_size: 8
+train_batch_size: 4
+train_grad_accum: 2
 train_max_length: 384
 train_learning_rate: 2.0e-4
 train_epochs: 1.0
@@ -23,4 +24,4 @@ eval_batch_size: 64
 eval_max_new_tokens: 256
 eval_limit: null
 
-precision: int8
+precision: nf4
