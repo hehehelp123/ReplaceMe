@@ -10,7 +10,7 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from .data import build_prompts, extract_final_answer, load_gsm8k
-from .quantization import BF16, quantization_config
+from .quantization import BF16, is_quantized, quantization_config
 
 
 def load_for_generation(model_path: str, adapter_path: Optional[str] = None,
@@ -24,7 +24,9 @@ def load_for_generation(model_path: str, adapter_path: Optional[str] = None,
         model_path, dtype=torch.bfloat16, device_map={"": 0},
         quantization_config=quantization_config(precision))
     if adapter_path is not None:
-        model = PeftModel.from_pretrained(model, adapter_path).merge_and_unload()
+        model = PeftModel.from_pretrained(model, adapter_path)
+        if not is_quantized(precision):
+            model = model.merge_and_unload()
 
     model.eval()
     model.config.use_cache = True
