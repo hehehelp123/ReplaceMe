@@ -1,5 +1,5 @@
 model_path: mistralai/Mistral-Nemo-Base-2407
-model_tag: mistral-nemo-12b
+model_tag: mistral-nemo-12b-nf4
 layers_to_skip: 10
 
 calib_size: 128

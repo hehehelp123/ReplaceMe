@@ -1,5 +1,5 @@
 model_path: unsloth/llama-3-8b
-model_tag: llama-3-8b
+model_tag: llama-3-8b-nf4
 layers_to_skip: 8
 
 calib_size: 128

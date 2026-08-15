@@ -1,5 +1,5 @@
 model_path: Qwen/Qwen3-14B-Base
-model_tag: qwen3-14b-base
+model_tag: qwen3-14b-base-nf4
 layers_to_skip: 10
 
 calib_size: 128
