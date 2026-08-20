@@ -15,3 +15,7 @@ hf/
 .cache/
 
 *.log
+
+ARCHITECTURE.md
+PLAN.md
+RULES.md
