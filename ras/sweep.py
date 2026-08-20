@@ -75,10 +75,7 @@ def sweep_blocks(config) -> Path:
         except Exception as error:
             record["error"] = f"{type(error).__name__}: {error}"
         finally:
-            _discard(candidate.run_dir / "pruned_ReplaceMe_joint_lstsq_1",
-                     str(candidate.run_dir / "pruned_ReplaceMe_joint_lstsq_1_transform"),
-                     candidate.restored_dir,
-                     candidate.heal_adapter_dir / "checkpoints")
+            _discard(candidate.heal_adapter_dir / "checkpoints")
             gc.collect()
             torch.cuda.empty_cache()
 

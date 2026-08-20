@@ -1,5 +1,6 @@
 model_path: unsloth/llama-3-8b
 model_tag: sweep-llama-3-8b-nf4
+runs_dir: /mnt/nas/replaceme-sweep
 layers_to_skip: 8
 
 calib_size: 128
