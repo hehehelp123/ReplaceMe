@@ -23,8 +23,8 @@ class CausalDataset(torch.utils.data.Dataset):
         return item
 
 
-def build_dataset(tokenizer, max_length: int):
-    dataset = load_gsm8k("train")
+def build_dataset(tokenizer, max_length: int, limit=None):
+    dataset = load_gsm8k("train", limit)
     texts = build_training_texts(dataset, tokenizer.eos_token)
     encodings = tokenizer(texts, truncation=True, max_length=max_length,
                           padding=False)
@@ -79,7 +79,8 @@ def train_lora(config, model_path: str, adapter_dir: Path) -> Path:
             remove_unused_columns=False,
             dataloader_pin_memory=False,
         ),
-        train_dataset=build_dataset(tokenizer, config.train_max_length),
+        train_dataset=build_dataset(tokenizer, config.train_max_length,
+                                   config.train_limit),
         data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model,
                                              padding=True),
     )

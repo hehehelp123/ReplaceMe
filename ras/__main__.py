@@ -3,6 +3,7 @@ import argparse
 from . import pipeline
 from .config import load_config
 from .rescore import rescore_all
+from .sweep import sweep_blocks
 
 STAGES = {
     "find-candidates": pipeline.find_candidates,
@@ -22,6 +23,7 @@ STAGES = {
     "scenario-2": pipeline.scenario_2,
     "scenario-3": pipeline.scenario_3,
     "rescore": lambda config: rescore_all(config.runs_dir),
+    "sweep": sweep_blocks,
 }
 
 

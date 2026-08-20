@@ -317,6 +317,7 @@ def lstsq(
         dtype=torch.bfloat16,
     )
 
+    norm_ratios = []
     for i in range(len(selected_blocks)):
         removed_before = sum(end_ids[j] - start_ids[j] for j in range(i))
         start_adj = start_ids[i] - removed_before
@@ -337,6 +338,7 @@ def lstsq(
 
         norm_ratio = (transformed_weight.to(torch.float32).norm()
                       / original_weight.to(torch.float32).norm()).item()
+        norm_ratios.append(norm_ratio)
         logging.info(f"Block {i}: down_proj of layer {layer_idx} scaled by "
                      f"{norm_ratio:.2f}x in Frobenius norm")
 
@@ -356,6 +358,7 @@ def lstsq(
         torch.save({
             'transforms': transforms,
             'selected_blocks': selected_blocks,
+            'norm_ratios': norm_ratios,
             'config': {
                 'alpha_act': alpha_act,
                 'alpha_grad': alpha_grad,
